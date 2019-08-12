@@ -1,0 +1,26 @@
+--- #Create AWS instances
+
+- hosts: local
+  connection: local
+  gather_facts: no
+  vars_files:
+    - aws_keys.yml
+  tasks:
+    - name: Refresh the ec2.py cache
+      shell: ./inventory/ec2.py --refresh-cache # location of your ec2.py inventory
+      changed_when: no
+
+    - name: Refresh inventory
+      meta: refresh_inventory
+
+- hosts: tag_Name_DBServer
+  remote_user: ec2-user
+  connection: ssh
+  become: yes
+  become_user: root
+  become_method: sudo # default
+  gather_facts: no
+  vars_files:
+    - aws_keys.yml
+  roles:
+    - role: dbserver

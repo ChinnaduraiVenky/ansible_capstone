@@ -1,0 +1,62 @@
+---
+# tasks file for aws_infra
+
+- name: Create an AWS instance for NGINX
+  ec2:
+    key_name: AnsibleCapstoneKeyPair
+    access_key: "{{ aws_access_key }}"
+    secret_key: "{{ aws_secret_key }}"
+    group: "{{ security_group }}"
+    instance_type: "{{ instance_type }}"
+    image: "{{ image }}"
+    wait: true
+    region: "{{ region }}"
+    vpc_subnet_id: "{{ subnet_id }}"
+    instance_tags:
+        Name: Webserver
+    assign_public_ip: yes
+  register: ec2_webservers
+
+- name: Create an AWS instance for MYSQL db
+  ec2:
+    key_name: AnsibleCapstoneKeyPair
+    access_key: "{{ aws_access_key }}"
+    secret_key: "{{ aws_secret_key }}"
+    group: "{{ security_group }}"
+    instance_type: "{{ instance_type }}"
+    image: "{{ image }}"
+    wait: true
+    region: "{{ region }}"
+    vpc_subnet_id: "{{ subnet_id }}"
+    instance_tags:
+        Name: DBServer
+    assign_public_ip: yes
+  register: ec2_dbservers
+
+- name: Wait for ssh to come up on webservers
+  wait_for: 
+    host: "{{ item.public_ip }}" 
+    port: 22 
+    delay: 10  
+    timeout: 300
+  loop: "{{ ec2_webservers.instances }}"
+
+- name: Wait for ssh to come up on dbservers
+  wait_for: 
+    host: "{{ item.public_ip }}"
+    port: 22 
+    delay: 10  
+    timeout: 300
+  loop: "{{ ec2_dbservers.instances }}"
+
+- name: associate new elastic IPs with each of the webserver instances
+  ec2_eip:
+    region: "{{ region }}"
+    device_id: "{{ item }}"
+  loop: "{{ ec2_webservers.instance_ids }}"
+
+- name: associate new elastic IPs with each of the dbserver instances
+  ec2_eip:
+    region: "{{ region }}"
+    device_id: "{{ item }}"
+  loop: "{{ ec2_dbservers.instance_ids }}"

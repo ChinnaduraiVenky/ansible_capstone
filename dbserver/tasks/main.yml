@@ -1,0 +1,11 @@
+---
+# tasks file for dbserver
+
+- name: update the packages in each server
+  package: 
+    name: '*'
+    state: latest
+
+#- name: Create nginxuser in each server
+#  hosts: webservers, dbservers
+#  script: add_nginx_user.sh 

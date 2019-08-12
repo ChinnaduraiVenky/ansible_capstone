@@ -1,0 +1,11 @@
+---
+# vars file for aws_infra
+
+#aws_access_key: "AKIAWVM3DENA5DBJE5DU"
+#aws_secret_key: "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"
+instance_type: t2.micro
+security_group: ansiblesecurity
+image: ami-0c322300a1dd5dc79
+region: us-east-1
+subnet_id: subnet-e80e71c6
+

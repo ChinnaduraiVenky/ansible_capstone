@@ -1,0 +1,14 @@
+[local]
+localhost
+
+# The EC2 plugin will populate these groups, but we need to add empty entries
+# here to make aliases for them below.
+[tag_Name_Webserver]
+[tag_Name_DBServer]
+
+[webservers:children]
+tag_Name_Webserver
+
+[dbservers:children]
+tag_Name_DBServer
+

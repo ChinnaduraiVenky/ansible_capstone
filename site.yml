@@ -1,0 +1,49 @@
+--- #Create AWS instances
+
+- hosts: local
+  connection: local
+  user: testuser
+  gather_facts: no
+  vars_files:
+    - aws_keys.yml
+  tasks:
+#    - name: Execute aws_infra  role 
+#      include_role: 
+#        name: aws_infra
+
+    - name: Refresh the ec2.py cache
+      shell: ./inventory/ec2.py --refresh-cache # location of your ec2.py inventory
+      changed_when: no
+
+    - name: Refresh inventory
+      meta: refresh_inventory
+
+- hosts: dbservers
+  user: ec2-user
+  connection: ssh
+  become: yes
+  become_user: root
+  become_method: sudo # default
+  gather_facts: no 
+  vars_files:
+    - aws_keys.yml
+  pre_tasks:
+    - name: Install python on the target host
+      raw: sudo yum install -y python3
+  roles:
+    - role: dbserver
+
+- hosts: webservers
+  remote_user: ec2-user
+  connection: ssh
+  become: yes
+  become_user: root
+  become_method: sudo # default
+  gather_facts: no 
+  vars_files:
+    - aws_keys.yml
+  pre_tasks:
+    - name: Install python on the target host
+      raw: sudo yum install -y python3
+  roles:
+    - role: webserver
