@@ -1,8 +1,6 @@
 ---
 # vars file for aws_infra
 
-#aws_access_key: "AKIAWVM3DENAXMWZA2FQ"
-#aws_secret_key: "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"
 instance_type: t2.micro
 security_group: ansiblesecurity
 image: ami-0c322300a1dd5dc79
