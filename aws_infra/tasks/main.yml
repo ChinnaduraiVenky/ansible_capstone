@@ -3,7 +3,7 @@
 
 - name: Create an AWS instance for NGINX
   ec2:
-    key_name: AnsibleCapstoneKeyPair
+    key_name: AnsibleCapstoneKeyPair2
     access_key: "{{ aws_access_key }}"
     secret_key: "{{ aws_secret_key }}"
     group: "{{ security_group }}"
@@ -19,7 +19,7 @@
 
 - name: Create an AWS instance for MYSQL db
   ec2:
-    key_name: AnsibleCapstoneKeyPair
+    key_name: AnsibleCapstoneKeyPair2
     access_key: "{{ aws_access_key }}"
     secret_key: "{{ aws_secret_key }}"
     group: "{{ security_group }}"
